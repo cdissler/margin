@@ -40,7 +40,7 @@ export function BottomNav(_props: BottomNavProps) {
     : "flex h-14 flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-bold text-[#163B5C] transition hover:bg-slate-50 active:scale-[0.98]";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] sm:px-5 sm:pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] sm:px-5 sm:pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
       <div className="mx-auto w-full max-w-md rounded-[1.6rem] border border-slate-200 bg-white/95 p-2 shadow-[0_-10px_35px_rgba(15,23,42,0.14)] backdrop-blur md:max-w-lg">
         <div className="grid grid-cols-2 gap-1.5">
           <Link href="/" prefetch className={homeClassName} aria-current={isHome ? "page" : undefined}>

@@ -35,34 +35,35 @@ export function MiniTotal({ label, value }: MiniTotalProps) {
 type ListRowProps = {
   checked: boolean;
   title: string;
-  subtitle: string;
   amount: number;
   onClick: () => void;
 };
 
-export function ListRow({ checked, title, subtitle, amount, onClick }: ListRowProps) {
+export function ListRow({ checked, title, amount, onClick }: ListRowProps) {
   return (
-    <button
-      onClick={onClick}
-      className="grid w-full grid-cols-[1fr_auto_28px] items-center gap-3 px-4 py-3 text-left transition hover:bg-slate-50 sm:px-5 sm:py-4"
-    >
-      <span className="min-w-0">
-        <span className={`block truncate text-sm font-bold ${checked ? "text-slate-400 line-through" : "text-slate-800"}`}>
-          {title}
-        </span>
-        <span className="mt-0.5 block truncate text-xs text-slate-500">{subtitle}</span>
+    <div className="pointer-events-none grid w-full grid-cols-[minmax(0,1fr)_112px_38px] items-center gap-4 px-4 py-3.5 text-left sm:grid-cols-[minmax(0,1fr)_132px_42px] sm:px-5 sm:py-4">
+      <span className={`block truncate text-base font-bold leading-6 sm:text-lg ${checked ? "text-slate-400 line-through" : "text-slate-800"}`}>
+        {title}
       </span>
-      <span className={`text-sm font-bold ${checked ? "text-slate-400" : "text-[#163B5C]"}`}>
+      <span className={`text-right text-base font-bold leading-6 tabular-nums sm:text-lg ${checked ? "text-slate-400" : "text-[#163B5C]"}`}>
         {formatMoney(amount)}
       </span>
-      <span
-        className={`flex h-5 w-5 items-center justify-center justify-self-end rounded-md border text-xs font-bold ${
-          checked ? "border-[#163B5C] bg-[#163B5C] text-white" : "border-slate-300 bg-white text-transparent"
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onClick();
+        }}
+        className={`pointer-events-auto flex h-9 w-9 items-center justify-center justify-self-end rounded-lg border text-base font-bold transition sm:h-10 sm:w-10 ${
+          checked
+            ? "border-[#163B5C] bg-[#163B5C] text-white"
+            : "border-slate-300 bg-white text-slate-300 hover:border-[#C95730] hover:text-[#C95730]"
         }`}
+        aria-label={`Post ${title}`}
       >
         ✓
-      </span>
-    </button>
+      </button>
+    </div>
   );
 }
 
@@ -73,6 +74,7 @@ type EmptyStateProps = {
 export function EmptyState({ text }: EmptyStateProps) {
   return <p className="px-4 py-5 text-sm text-slate-500 sm:px-5 sm:py-7">{text}</p>;
 }
+
 type BankAccountCardProps = {
   bankBalance: number;
   saveBankBalance: (value: number) => void;
@@ -126,15 +128,15 @@ export function MonthlySummaryCard({
       <div className="grid grid-cols-3 divide-x divide-slate-200">
         <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Bank</p>
-          <p className="mt-0.5 truncate text-base font-bold sm:mt-1 sm:text-xl text-[#163B5C]">{formatMoney(bankBalance)}</p>
+          <p className="mt-0.5 truncate text-base font-bold text-[#163B5C] sm:mt-1 sm:text-xl">{formatMoney(bankBalance)}</p>
         </div>
         <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Payments</p>
-          <p className="mt-0.5 truncate text-base font-bold sm:mt-1 sm:text-xl text-slate-600">-{formatMoney(pendingPaymentTotal)}</p>
+          <p className="mt-0.5 truncate text-base font-bold text-slate-600 sm:mt-1 sm:text-xl">-{formatMoney(pendingPaymentTotal)}</p>
         </div>
         <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Bills</p>
-          <p className="mt-0.5 truncate text-base font-bold sm:mt-1 sm:text-xl text-slate-600">-{formatMoney(unpaidBillTotal)}</p>
+          <p className="mt-0.5 truncate text-base font-bold text-slate-600 sm:mt-1 sm:text-xl">-{formatMoney(unpaidBillTotal)}</p>
         </div>
       </div>
     </section>
@@ -165,7 +167,6 @@ export function ClearedTotalsCard({ postedPaymentTotal, pendingPaymentTotal, pai
   );
 }
 
-
 type PaymentsSectionProps = {
   paymentName: string;
   paymentAmount: string;
@@ -190,7 +191,7 @@ export function PaymentsSection({
   return (
     <div className="space-y-3 sm:space-y-4">
       <section className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:p-4">
-        <div className="grid grid-cols-[120px_1fr_auto] gap-2 sm:grid-cols-[170px_1fr_auto] sm:gap-3">
+        <div className="grid grid-cols-[112px_1fr_58px] gap-2 sm:grid-cols-[150px_1fr_64px] sm:gap-3">
           <input
             type="number"
             min="0"
@@ -220,9 +221,7 @@ export function PaymentsSection({
       <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#C95730]/20">
         <div className="border-b border-[#C95730]/10 bg-[#C95730]/[0.04] px-4 py-2.5 sm:px-5 sm:py-3">
           <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-bold text-[#C95730] sm:text-base">Payments waiting to post</h2>
-            </div>
+            <h2 className="text-base font-bold text-[#C95730] sm:text-lg">Payments waiting to post</h2>
             <div className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2.5 text-xs font-bold text-[#C95730] shadow-sm ring-1 ring-[#C95730]/15">
               {payments.length}
             </div>
@@ -238,7 +237,6 @@ export function PaymentsSection({
                 key={payment.id}
                 checked={false}
                 title={payment.name}
-                subtitle="Check off when it posts"
                 amount={payment.amount}
                 onClick={() => postPayment(payment.id)}
               />
@@ -249,7 +247,6 @@ export function PaymentsSection({
     </div>
   );
 }
-
 
 type MonthlyBillsSectionProps = {
   monthlyBills: MonthlyBill[];
@@ -265,11 +262,11 @@ export function MonthlyBillsSection({
   moveBillToPayments,
 }: MonthlyBillsSectionProps) {
   return (
-    <section className="mb-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-[#C95730]/20 sm:mb-0">
-      <div className="flex items-center justify-between gap-3 border-b border-[#C95730]/10 bg-[#C95730]/[0.04] px-4 py-2.5 sm:px-5 sm:py-3">
-        <h2 className="text-sm font-bold text-[#C95730] sm:text-base">Monthly bills</h2>
-        <p className="shrink-0 text-sm font-semibold text-slate-500">
-          Total <span className="text-[#C95730]">{formatMoney(unpaidBillTotal)}</span>
+    <section className="mb-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 sm:mb-0">
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3 sm:px-5">
+        <h2 className="text-sm font-bold text-slate-800 sm:text-base">Monthly bills</h2>
+        <p className="shrink-0 text-right text-sm font-bold tabular-nums text-[#163B5C]">
+          {formatMoney(unpaidBillTotal)}
         </p>
       </div>
 
@@ -280,23 +277,20 @@ export function MonthlyBillsSection({
           monthlyBills.map((bill) => (
             <div
               key={bill.id}
-              className="grid grid-cols-[1fr_auto] items-center gap-2 px-4 py-2.5 transition hover:bg-slate-50 sm:gap-3 sm:px-5 sm:py-4"
+              className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_58px_100px_68px] items-center gap-3 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_72px_116px_76px] sm:gap-4 sm:px-5 sm:py-3.5"
             >
-              <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-slate-800">
-                  {bill.name} <span className="font-semibold text-slate-400">· Due {bill.dueDay}</span>
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-3">
-                <p className="text-sm font-bold text-[#163B5C]">{formatMoney(bill.amount)}</p>
-                <button
-                  onClick={() => moveBillToPayments(bill.id)}
-                  disabled={isSaving}
-                  className="rounded-full bg-[#C95730] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#ad4527] disabled:cursor-not-allowed disabled:opacity-50 sm:px-3.5"
-                >
-                  Paid
-                </button>
-              </div>
+              <p className="min-w-0 truncate text-base font-bold text-slate-800 sm:text-lg">{bill.name}</p>
+              <p className="text-right text-sm font-bold tabular-nums text-slate-400 sm:text-base">Due {bill.dueDay}</p>
+              <p className="text-right text-base font-bold tabular-nums text-[#163B5C] sm:text-lg">{formatMoney(bill.amount)}</p>
+              <button
+                type="button"
+                onClick={() => moveBillToPayments(bill.id)}
+                disabled={isSaving}
+                className="h-10 rounded-lg bg-[#C95730] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#ad4527] disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+                aria-label={`Move ${bill.name} to payments`}
+              >
+                Paid
+              </button>
             </div>
           ))
         )}

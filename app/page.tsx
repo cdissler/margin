@@ -321,7 +321,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-24 text-slate-900">
+    <main className="min-h-screen bg-slate-50 pb-20 text-slate-900">
       {session ? (
         <TopNav
           isLoading={isLoading}
@@ -330,7 +330,7 @@ export default function Home() {
         />
       ) : null}
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col px-3 pb-2 pt-3 sm:px-5 sm:pb-3 sm:pt-4 md:px-8 md:pt-5">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-3 py-3 sm:px-5 sm:py-5 md:px-8 md:py-6">
         {errorMessage ? (
           <div className="mb-3 rounded-2xl border border-[#C95730]/30 bg-white px-4 py-3 text-sm font-semibold text-[#C95730] shadow-sm sm:mb-5 sm:px-5 sm:py-4">
             {errorMessage}
@@ -345,8 +345,8 @@ export default function Home() {
           <AuthCard onAuthSuccess={() => undefined} />
         ) : (
           <>
-            <section className="grid gap-3 lg:grid-cols-[340px_minmax(0,1fr)] lg:items-start lg:gap-4">
-              <aside className="space-y-3 lg:sticky lg:top-5">
+            <section className="grid gap-3 sm:gap-4 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start lg:gap-6">
+              <aside className="space-y-3 sm:space-y-4 lg:sticky lg:top-6 lg:space-y-5">
                 <MonthlySummaryCard
                   bankBalance={bankBalance}
                   pendingPaymentTotal={pendingPaymentTotal}
@@ -358,7 +358,7 @@ export default function Home() {
 
               </aside>
 
-              <section className="space-y-3 lg:space-y-4">
+              <section className="space-y-3 sm:space-y-4 lg:space-y-6">
                 <PaymentsSection
                   paymentName={paymentName}
                   paymentAmount={paymentAmount}
@@ -379,14 +379,17 @@ export default function Home() {
               </section>
             </section>
 
-            <section className="mt-3 rounded-2xl bg-white p-2.5 shadow-sm ring-1 ring-slate-200 sm:p-3">
+            <section className="mt-3 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 sm:mt-4 sm:p-4 lg:mt-6">
               <button
                 onClick={startNextMonth}
                 disabled={isLoading || isSaving}
-                className="h-11 w-full rounded-xl bg-[#163B5C] px-4 text-sm font-bold text-white transition hover:bg-[#102c45] disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-12 w-full rounded-xl bg-[#163B5C] px-4 text-sm font-bold text-white transition hover:bg-[#102c45] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Reset bills
               </button>
+              <p className="mt-2 text-center text-xs text-slate-500">
+                Reloads your monthly bills from the recurring bills list.
+              </p>
             </section>
           </>
         )}
