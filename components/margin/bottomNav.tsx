@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type BottomNavProps = Record<string, never>;
@@ -31,25 +32,25 @@ export function BottomNav(_props: BottomNavProps) {
   const isBills = pathname.startsWith("/bills");
 
   const homeClassName = isHome
-    ? "flex h-12 flex-col items-center justify-center gap-0.5 rounded-2xl bg-[#163B5C] text-xs font-bold text-white shadow-sm transition active:scale-[0.98]"
-    : "flex h-12 flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-bold text-[#163B5C] transition hover:bg-slate-50 active:scale-[0.98]";
+    ? "flex h-14 flex-col items-center justify-center gap-0.5 rounded-2xl bg-[#163B5C] text-xs font-bold text-white shadow-sm transition active:scale-[0.98]"
+    : "flex h-14 flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-bold text-[#163B5C] transition hover:bg-slate-50 active:scale-[0.98]";
 
   const billsClassName = isBills
-    ? "flex h-12 flex-col items-center justify-center gap-0.5 rounded-2xl bg-[#163B5C] text-xs font-bold text-white shadow-sm transition active:scale-[0.98]"
-    : "flex h-12 flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-bold text-[#163B5C] transition hover:bg-slate-50 active:scale-[0.98]";
+    ? "flex h-14 flex-col items-center justify-center gap-0.5 rounded-2xl bg-[#163B5C] text-xs font-bold text-white shadow-sm transition active:scale-[0.98]"
+    : "flex h-14 flex-col items-center justify-center gap-0.5 rounded-2xl text-xs font-bold text-[#163B5C] transition hover:bg-slate-50 active:scale-[0.98]";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 px-3 pb-3 sm:px-5 sm:pb-4">
+    <nav className="fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] sm:px-5 sm:pb-[calc(env(safe-area-inset-bottom)+1rem)]">
       <div className="mx-auto w-full max-w-md rounded-[1.6rem] border border-slate-200 bg-white/95 p-2 shadow-[0_-10px_35px_rgba(15,23,42,0.14)] backdrop-blur md:max-w-lg">
         <div className="grid grid-cols-2 gap-1.5">
-          <a href="/" className={homeClassName} aria-current={isHome ? "page" : undefined}>
+          <Link href="/" prefetch className={homeClassName} aria-current={isHome ? "page" : undefined}>
             <HomeIcon />
             <span>Home</span>
-          </a>
-          <a href="/bills" className={billsClassName} aria-current={isBills ? "page" : undefined}>
+          </Link>
+          <Link href="/bills" prefetch className={billsClassName} aria-current={isBills ? "page" : undefined}>
             <BillsIcon />
             <span>Bills</span>
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
