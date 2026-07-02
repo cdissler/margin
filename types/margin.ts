@@ -9,6 +9,7 @@ export type MonthlyBill = {
   name: string;
   amount: number;
   dueDay: number;
+  dueMonth: string | null;
   paid: boolean;
 };
 
@@ -29,5 +30,6 @@ export type MarginBillRow = {
   name: string;
   amount: number | string;
   due_day: number;
+  due_month: string | null;
   paid: boolean;
 };

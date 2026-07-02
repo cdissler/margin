@@ -251,15 +251,19 @@ export function PaymentsSection({
 type MonthlyBillsSectionProps = {
   monthlyBills: MonthlyBill[];
   unpaidBillTotal: number;
+  billMonthLabel: string;
   isSaving: boolean;
   moveBillToPayments: (id: string) => void;
+  openBillEditor?: (bill: MonthlyBill) => void;
 };
 
 export function MonthlyBillsSection({
   monthlyBills,
   unpaidBillTotal,
+  billMonthLabel,
   isSaving,
   moveBillToPayments,
+  openBillEditor,
 }: MonthlyBillsSectionProps) {
   return (
     <section className="mb-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 sm:mb-0">
@@ -275,23 +279,37 @@ export function MonthlyBillsSection({
           <EmptyState text="No monthly bills added yet." />
         ) : (
           monthlyBills.map((bill) => (
-            <div
+            <button
               key={bill.id}
-              className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_58px_100px_68px] items-center gap-3 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_72px_116px_76px] sm:gap-4 sm:px-5 sm:py-3.5"
+              type="button"
+              onClick={() => openBillEditor?.(bill)}
+              className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_86px_96px_64px] items-center gap-2 px-4 py-3 text-left transition hover:bg-slate-50 active:bg-slate-100 sm:grid-cols-[minmax(0,1fr)_104px_112px_72px] sm:gap-3 sm:px-5 sm:py-3.5"
             >
-              <p className="min-w-0 truncate text-base font-bold text-slate-800 sm:text-lg">{bill.name}</p>
-              <p className="text-right text-sm font-bold tabular-nums text-slate-400 sm:text-base">Due {bill.dueDay}</p>
-              <p className="text-right text-base font-bold tabular-nums text-[#163B5C] sm:text-lg">{formatMoney(bill.amount)}</p>
-              <button
-                type="button"
-                onClick={() => moveBillToPayments(bill.id)}
-                disabled={isSaving}
-                className="h-10 rounded-lg bg-[#C95730] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#ad4527] disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:text-base"
+              <p className="min-w-0 truncate text-base font-bold leading-6 text-slate-800">{bill.name}</p>
+              <p className="whitespace-nowrap text-right text-sm font-bold leading-6 tabular-nums text-slate-400">
+                {bill.dueMonth ? `Due ${bill.dueMonth} ${bill.dueDay}` : `Due ${bill.dueDay}`}
+              </p>
+              <p className="text-right text-base font-bold leading-6 tabular-nums text-[#163B5C]">{formatMoney(bill.amount)}</p>
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  moveBillToPayments(bill.id);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    moveBillToPayments(bill.id);
+                  }
+                }}
+                className="flex h-9 items-center justify-center rounded-lg bg-[#C95730] px-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#ad4527] sm:h-10"
                 aria-label={`Move ${bill.name} to payments`}
               >
                 Paid
-              </button>
-            </div>
+              </span>
+            </button>
           ))
         )}
       </div>

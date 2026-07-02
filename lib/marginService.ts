@@ -24,7 +24,7 @@ export async function loadMarginData(supabase: SupabaseClient) {
       .order("created_at", { ascending: true }),
     supabase
       .from("margin_bills")
-      .select("id, name, amount, due_day, paid")
+      .select("id, name, amount, due_day, due_month, paid")
       .order("due_day", { ascending: true }),
   ]);
 
@@ -62,6 +62,33 @@ export async function createPayment(supabase: SupabaseClient, name: string, amou
     .single();
 }
 
+export async function updateMonthlyBill({
+  supabase,
+  billId,
+  name,
+  amount,
+  dueDay,
+  dueMonth,
+}: {
+  supabase: SupabaseClient;
+  billId: string;
+  name: string;
+  amount: number;
+  dueDay: number;
+  dueMonth: string | null;
+}) {
+  return supabase
+    .from("margin_bills")
+    .update({ name, amount, due_day: dueDay, due_month: dueMonth })
+    .eq("id", billId)
+    .select("id, name, amount, due_day, due_month, paid")
+    .single();
+}
+
+export async function deleteMonthlyBill(supabase: SupabaseClient, billId: string) {
+  return supabase.from("margin_bills").delete().eq("id", billId);
+}
+
 export async function postPaymentAndUpdateProfile({
   supabase,
   profileId,
@@ -86,7 +113,7 @@ export async function postPaymentAndUpdateProfile({
   return { profileResponse, deleteResponse };
 }
 
-export async function startNextMonthData(supabase: SupabaseClient) {
+export async function startNextMonthData(supabase: SupabaseClient, dueMonth: string) {
   const { data: userData, error: userError } = await supabase.auth.getUser();
 
   if (userError || !userData.user) {
@@ -111,30 +138,18 @@ export async function startNextMonthData(supabase: SupabaseClient) {
     };
   }
 
-  const deleteBillsResponse = await supabase
-    .from("margin_bills")
-    .delete()
-    .neq("id", "00000000-0000-0000-0000-000000000000");
-
-  if (deleteBillsResponse.error) {
-    return {
-      billsResponse: deleteBillsResponse,
-      paymentsResponse: { error: null },
-      profileResponse: { error: null },
-    };
-  }
-
   const billsToInsert = (recurringBillsResponse.data ?? []).map((bill) => ({
     user_id: userData.user.id,
     name: bill.name,
     amount: bill.amount,
     due_day: bill.due_day,
+    due_month: dueMonth,
     paid: false,
   }));
 
   const billsResponse = billsToInsert.length
     ? await supabase.from("margin_bills").insert(billsToInsert)
-    : deleteBillsResponse;
+    : { error: null };
 
   return {
     billsResponse,
