@@ -1,0 +1,17 @@
+{
+  "name": "Margin",
+  "short_name": "Margin",
+  "description": "A simple monthly cash-flow tracker.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#163B5C",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
