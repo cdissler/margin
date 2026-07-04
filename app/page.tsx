@@ -31,6 +31,35 @@ import type {
   Payment,
 } from "@/types/margin";
 
+const billMonthSortOrder = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function getBillMonthSortValue(month: string | null) {
+  if (!month) {
+    return 99;
+  }
+
+  const monthIndex = billMonthSortOrder.indexOf(month);
+  return monthIndex === -1 ? 99 : monthIndex;
+}
+
+function sortMonthlyBillsByMonthThenDay(bills: MonthlyBill[]) {
+  return [...bills].sort((firstBill, secondBill) => {
+    const monthDifference = getBillMonthSortValue(firstBill.dueMonth) - getBillMonthSortValue(secondBill.dueMonth);
+
+    if (monthDifference !== 0) {
+      return monthDifference;
+    }
+
+    const dayDifference = firstBill.dueDay - secondBill.dueDay;
+
+    if (dayDifference !== 0) {
+      return dayDifference;
+    }
+
+    return firstBill.name.localeCompare(secondBill.name);
+  });
+}
+
 export default function Home() {
   const [profileId, setProfileId] = useState<string | null>(null);
   const [bankBalance, setBankBalance] = useState(0);
@@ -177,14 +206,16 @@ export default function Home() {
       }))
     );
     setMonthlyBills(
-      ((billsResponse.data ?? []) as MarginBillRow[]).map((bill) => ({
-        id: bill.id,
-        name: bill.name,
-        amount: toMoneyNumber(bill.amount),
-        dueDay: bill.due_day,
-        dueMonth: bill.due_month,
-        paid: bill.paid,
-      }))
+      sortMonthlyBillsByMonthThenDay(
+        ((billsResponse.data ?? []) as MarginBillRow[]).map((bill) => ({
+          id: bill.id,
+          name: bill.name,
+          amount: toMoneyNumber(bill.amount),
+          dueDay: bill.due_day,
+          dueMonth: bill.due_month,
+          paid: bill.paid,
+        }))
+      )
     );
 
     setIsLoading(false);
@@ -367,8 +398,8 @@ export default function Home() {
     const updatedBill = response.data as MarginBillRow;
 
     setMonthlyBills((currentBills) =>
-      currentBills
-        .map((bill) =>
+      sortMonthlyBillsByMonthThenDay(
+        currentBills.map((bill) =>
           bill.id === selectedMonthlyBill.id
             ? {
                 id: updatedBill.id,
@@ -380,7 +411,7 @@ export default function Home() {
               }
             : bill
         )
-        .sort((firstBill, secondBill) => firstBill.dueDay - secondBill.dueDay)
+      )
     );
     setSelectedMonthlyBill(null);
     setIsSaving(false);
