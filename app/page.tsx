@@ -488,7 +488,6 @@ export default function Home() {
                 <MonthlySummaryCard
                   bankBalance={bankBalance}
                   pendingPaymentTotal={pendingPaymentTotal}
-                  unpaidBillTotal={unpaidBillTotal}
                   projectedBalance={projectedBalance}
                 />
 
