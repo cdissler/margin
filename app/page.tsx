@@ -153,7 +153,7 @@ export default function Home() {
   const selectedBillMonthLabel = monthOptions.find((month) => month.value === selectedBillMonth)?.shortLabel ?? "";
 
 
-  const projectedBalance = bankBalance - pendingPaymentTotal - unpaidBillTotal;
+  const projectedBalance = bankBalance - pendingPaymentTotal;
 
   async function loadMarginData() {
     if (!supabase) {
