@@ -108,14 +108,12 @@ export function BankAccountCard({ bankBalance, saveBankBalance }: BankAccountCar
 type MonthlySummaryCardProps = {
   bankBalance: number;
   pendingPaymentTotal: number;
-  unpaidBillTotal: number;
   projectedBalance: number;
 };
 
 export function MonthlySummaryCard({
   bankBalance,
   pendingPaymentTotal,
-  unpaidBillTotal,
   projectedBalance,
 }: MonthlySummaryCardProps) {
   return (
@@ -125,7 +123,7 @@ export function MonthlySummaryCard({
         <p className="mt-1.5 text-3xl font-bold tracking-tight sm:text-4xl">{formatMoney(projectedBalance)}</p>
       </div>
 
-      <div className="grid grid-cols-3 divide-x divide-slate-200">
+      <div className="grid grid-cols-2 divide-x divide-slate-200">
         <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Bank</p>
           <p className="mt-0.5 truncate text-base font-bold text-[#163B5C] sm:mt-1 sm:text-xl">{formatMoney(bankBalance)}</p>
@@ -133,10 +131,6 @@ export function MonthlySummaryCard({
         <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
           <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Payments</p>
           <p className="mt-0.5 truncate text-base font-bold text-slate-600 sm:mt-1 sm:text-xl">-{formatMoney(pendingPaymentTotal)}</p>
-        </div>
-        <div className="px-2 py-2.5 text-center sm:px-3 sm:py-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-400 sm:text-[11px]">Bills</p>
-          <p className="mt-0.5 truncate text-base font-bold text-slate-600 sm:mt-1 sm:text-xl">-{formatMoney(unpaidBillTotal)}</p>
         </div>
       </div>
     </section>
@@ -146,21 +140,17 @@ export function MonthlySummaryCard({
 type ClearedTotalsCardProps = {
   postedPaymentTotal: number;
   pendingPaymentTotal: number;
-  paidBillTotal: number;
 };
 
-export function ClearedTotalsCard({ postedPaymentTotal, pendingPaymentTotal, paidBillTotal }: ClearedTotalsCardProps) {
+export function ClearedTotalsCard({ postedPaymentTotal, pendingPaymentTotal }: ClearedTotalsCardProps) {
   return (
     <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-      <div className="grid grid-cols-3 divide-x divide-slate-100">
+      <div className="grid grid-cols-2 divide-x divide-slate-100">
         <div className="px-2 py-3 text-center sm:px-3">
           <MiniTotal label="Posted" value={postedPaymentTotal} />
         </div>
         <div className="px-2 py-3 text-center sm:px-3">
           <MiniTotal label="Waiting" value={Number.isFinite(pendingPaymentTotal) ? pendingPaymentTotal : 0} />
-        </div>
-        <div className="px-2 py-3 text-center sm:px-3">
-          <MiniTotal label="Bills" value={paidBillTotal} />
         </div>
       </div>
     </section>
